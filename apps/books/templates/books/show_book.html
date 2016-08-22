@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{book.title}}</title>
+</head>
+<body>
+  <a href="{% url 'books_index' %}">Home</a> | <a href="{% url 'logout' %}">Logout</a>
+  <h1>{{book.title}}</h1>
+  <h2>Author: {{book.author}}</h2>
+  <div class="reviews">
+    <h3>Reviews:</h3>
+    {% if reviews %}
+      {% for review in reviews %}
+      <hr>
+        <p>Rating: {{review.rating}}</p>
+        <p><a href="{% url 'users_show' user_id=review.user.id %}">{{review.user.name}}</a> says: {{review.review}}</p>
+        <p>Posted on {{review.created_at}}
+          {% if review.user.id == request.session.user_id %}
+            | <a href="{% url 'reviews_delete' review_id=review.id}">Delete This Review</a>
+          {% endif %}
+        </p>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="new_review">
+    {% if messages %}
+      {% for message in messages %}
+        <p>{{message}}</p>
+      {% endfor %}
+    {% endif %}
+    <h4>Add a Review:</h4>
+    <form action="{% url 'books_review' book_id=book.id %}" method="post">
+      {% csrf_token %}
+      <p><textarea name="review"></textarea></p>
+      <p>Rating:
+        <select name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </p>
+      <p><input type="submit" value="Submit Review"></p>
+    </form>
+  </div>
+</body>
+</html>

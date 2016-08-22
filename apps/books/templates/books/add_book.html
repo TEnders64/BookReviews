@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add a New Book</title>
+</head>
+<body>
+  <h1>Add a new Book Title and Review</h1>
+  {% if messages %}
+    {% for message in messages %}
+      <p>{{message}}</p>
+    {% endfor %}
+  {% endif %}
+  <form action="{% url 'books_create' %}" method="post">
+    {% csrf_token %}
+    <p>Book Title: <input type="text" name="title"></p>
+    <div>Author:
+      <p>Choose from the list:
+        <select name="author">
+          {% if authors %}
+            {% for author in authors %}
+            <option value="{{author.author}}">{{author.author}}</option>
+            {% endfor %}
+          {% endif %}
+        </select>
+      </p>
+      <p>Or add a new author:
+        <input type="text" name="author">
+      </p>
+    </div>
+    <p>Review: <textarea name="review"></textarea></p>
+    <p>Rating:
+      <select name="rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </p>
+    <p><input type="submit" value="Add Book and Review"></p>
+  </form>
+</body>
+</html>
